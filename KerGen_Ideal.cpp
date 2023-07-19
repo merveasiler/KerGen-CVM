@@ -99,14 +99,10 @@ vector<double> KerGen_Ideal::initialize(double* point) {
 	}
 	avgLength = avgLength / hostMeshptr->getNumOfEdges();
 	//cout << avgLength << endl;
-	
-	if (avgLength < 2)
-		BIG_EPSILON = 1e-12;
-	else if (avgLength < 10)
-		BIG_EPSILON = 1e-10;
-	else
-		BIG_EPSILON = 1e-8;
-	
+
+	BIG_EPSILON = avgLength * 1e-11;
+	//BIG_EPSILON = avgLength * 1e-8;
+
 	return scalarsVector;
 }
 

@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 	{
 		string command_type = "kergen_ideal";	// argv[1];
 		//string shape_path = "D:/VS_Workspace/3D_Databases/DB-Basic/nonsymmetric.off"; // argv[2];
-		string shape_path = "D:/VS_Workspace/3D_Databases/DB-Star-shaped-meshes/data/star.off";
+		string shape_path = "D:/VS_Workspace/3D_Databases/DB-Star-shaped-meshes/data/Rock_2.obj";
 		//string shape_path = "D:/VS_Workspace/3D_Databases/DB-ItalianStarShapes/Complex_Models/bot_eye.off";
 		//string shape_path = "D:/VS_Workspace/3D_Databases/DB-ItalianStarShapes/Thingi/data/129975.off";
 		//string shape_path = "D:/VS_Workspace/3D_Databases/DB-ItalianStarShapes/Refinements/vase/vase6.off";
