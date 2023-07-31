@@ -19,7 +19,7 @@ using namespace boost::filesystem;
 
 /* ***************************** GLOBAL VARIABLES ***************************** */
 /* */ double executionCount = 10;
-/* */ bool qualityComparison = true;
+/* */ bool qualityComparison = true; 
 /* **************************************************************************** */
 
 void doExperimentForPaper(string meshName) {
