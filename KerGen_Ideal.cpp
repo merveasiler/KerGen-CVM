@@ -121,7 +121,7 @@ int KerGen_Ideal::findTheClosestHalfSpace2(double* point, vector<double>& scalar
 
 	int theClosestId = theClosestIds[0];
 	scalarsVector.clear();
-	double* direction = halfSpaceSet[theClosestId].ABCD;
+	double* direction = halfSpaceSet[theClosestId].ABCD; 
 	
 	/********************* MAKE ROBUST *********************/
 	while (true) {
