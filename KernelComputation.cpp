@@ -4,7 +4,7 @@
 #include "SphericalParametrization.h"
 #include "ShapeMorphing.h"
 #include "KernelExpansion.h"
-#include "KerGen_Ideal.h"
+#include "KerGen.h"
 #include "KernelByCGAL.h"
 #include "sdlp.h"
 #include "SceneManager.h"
@@ -66,7 +66,7 @@ void doExperimentForPaper(string meshName) {
 
 		// Choose algoType
 		if (algoType == "kergen_ideal")
-			kernelExpansions.push_back(new KerGen_Ideal(mesh));
+			kernelExpansions.push_back(new KerGen(mesh));
 		else if (algoType == "kernel_by_cgal")
 			kernelExpansions.push_back(new KernelByCGAL(mesh));
 		else;
@@ -141,7 +141,7 @@ void ComputeKernel(string meshName, string algoType) {
 	vector<KernelExpansion*> kernelExpansions;
 	for (int i = 0; i < executionCount; i++) {
 		if (algoType == "kergen_ideal")
-			kernelExpansions.push_back(new KerGen_Ideal(mesh));
+			kernelExpansions.push_back(new KerGen(mesh));
 		else if (algoType == "kernel_by_cgal")
 			kernelExpansions.push_back(new KernelByCGAL(mesh));
 		else;
@@ -232,7 +232,7 @@ void ComputeBatchKernel(string inputFolderName, string outputFolderName, string 
 		vector<KernelExpansion*> kernelExpansions;
 		for (int i = 0; i < executionCount; i++) {
 			if (algoType == "batch_kergen_ideal")
-				kernelExpansions.push_back(new KerGen_Ideal(mesh));
+				kernelExpansions.push_back(new KerGen(mesh));
 			else if (algoType == "batch_kernel_cgal")
 				kernelExpansions.push_back(new KernelByCGAL(mesh));
 			else;
@@ -470,7 +470,7 @@ void ShapeMorphByLerp(string sourceMeshName, string targetMeshName) {
 
 void computeCenterOfKernel(Mesh& mesh, double center[3]) {
 
-	KernelExpansion* kernelExpansion(new KerGen_Ideal(mesh));
+	KernelExpansion* kernelExpansion(new KerGen(mesh));
 	kernelExpansion->expandKernel();
 	Mesh kernel = kernelExpansion->getKernel();
 

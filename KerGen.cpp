@@ -1,6 +1,6 @@
 // @author Merve Asiler
 
-#include "KerGen_Ideal.h"
+#include "KerGen.h"
 #include "BaseGeoOpUtils.h"
 #include "sdlp.h"
 #include "CGALUtils.h"
@@ -11,16 +11,16 @@ using namespace cinolib;
 
 //constexpr double BIG_EPSILON = 1e-12;
 
-KerGen_Ideal::KerGen_Ideal(const Mesh& hostMesh) :
+KerGen::KerGen(const Mesh& hostMesh) :
 	KernelExpansion(hostMesh, true) {
 
 }
 
-KerGen_Ideal::~KerGen_Ideal() {
+KerGen::~KerGen() {
 
 }
 
-void KerGen_Ideal::expandKernel() {
+void KerGen::expandKernel() {
 
 	double point[3];
 	if (this->initialPoint == NULL)
@@ -37,10 +37,10 @@ void KerGen_Ideal::expandKernel() {
 
 	for (bool any_white_left = false; ; any_white_left = false) {
 		for (int i = 0; i < halfSpaceSet.size(); i++) {
-			if (isKernelFace[i] == ProcessColor_Ideal::WHITE) {
+			if (isKernelFace[i] == ProcessColor::WHITE) {
 				while (!edgePartners[i].empty()) {
 					// initializations
-					EdgePartnerTriple_Ideal& ept = edgePartners[i].front();
+					EdgePartnerTriple& ept = edgePartners[i].front();
 					int partnerId = ept.partnerId;
 					double edgeDirection[3] = { ept.edgeDirection[0], ept.edgeDirection[1], ept.edgeDirection[2] };
 					double startPoint[3] = { ept.startPoint[0], ept.startPoint[1], ept.startPoint[2] };
@@ -59,7 +59,7 @@ void KerGen_Ideal::expandKernel() {
 					number_of_kernel_edges++;
 				}
 				any_white_left = true;
-				isKernelFace[i] = ProcessColor_Ideal::GREEN;
+				isKernelFace[i] = ProcessColor::GREEN;
 				number_of_kernel_faces++;
 				break;
 			}
@@ -77,15 +77,15 @@ void KerGen_Ideal::expandKernel() {
 
 }
 
-vector<double> KerGen_Ideal::initialize(double* point) {
+vector<double> KerGen::initialize(double* point) {
 
 	double* scalarsArray = findValueVectorSatisfiedByPoint(point, halfSpaceSet);
 	vector<double> scalarsVector;
 	filterRepetitions2(scalarsArray, scalarsVector);
 
 	for (int i = 0; i < halfSpaceSet.size(); i++) {
-		edgePartners.push_back(queue<EdgePartnerTriple_Ideal>());
-		isKernelFace.push_back(ProcessColor_Ideal::RED);
+		edgePartners.push_back(queue<EdgePartnerTriple>());
+		isKernelFace.push_back(ProcessColor::RED);
 		edgePartnerIds.push_back(vector<int>());
 	}
 
@@ -106,7 +106,7 @@ vector<double> KerGen_Ideal::initialize(double* point) {
 	return scalarsVector;
 }
 
-int KerGen_Ideal::findTheClosestHalfSpace2(double* point, vector<double>& scalarsVector) {
+int KerGen::findTheClosestHalfSpace2(double* point, vector<double>& scalarsVector) {
 
 	double theClosestDistance = numeric_limits<double>::infinity();
 	vector<int> theClosestIds;
@@ -161,7 +161,7 @@ int KerGen_Ideal::findTheClosestHalfSpace2(double* point, vector<double>& scalar
 
 }
 
-int KerGen_Ideal::findTheClosestHalfSpace2(double* point, int id) {
+int KerGen::findTheClosestHalfSpace2(double* point, int id) {
 
 	double theClosestDistance = numeric_limits<double>::infinity();
 	int theClosestId = -1;
@@ -262,18 +262,18 @@ int KerGen_Ideal::findTheClosestHalfSpace2(double* point, int id) {
 	vertexParentIds.push_back(parentIdsForNewVertex);
 	kernel.addVertex(point[0], point[1], point[2]);
 
-	edgePartners[id].push(EdgePartnerTriple_Ideal(theClosestId, intersectionLineDirection, point, 0, -1));
+	edgePartners[id].push(EdgePartnerTriple(theClosestId, intersectionLineDirection, point, 0, -1));
 	edgePartnerIds[id].push_back(theClosestId);
 	edgePartnerIds[theClosestId].push_back(id);
-	isKernelFace[id] = ProcessColor_Ideal::WHITE;
-	isKernelFace[theClosestId] = ProcessColor_Ideal::WHITE;
+	isKernelFace[id] = ProcessColor::WHITE;
+	isKernelFace[theClosestId] = ProcessColor::WHITE;
 
 	return theClosestId;
 
 }
 
 
-int KerGen_Ideal::findTheClosestHalfSpace(double* point, vector<double>& scalarsVector) {
+int KerGen::findTheClosestHalfSpace(double* point, vector<double>& scalarsVector) {
 
 	double theClosestDistance = numeric_limits<double>::infinity();
 	vector<int> theClosestIds;
@@ -293,7 +293,7 @@ int KerGen_Ideal::findTheClosestHalfSpace(double* point, vector<double>& scalars
 	return theClosestId;
 }
 
-int KerGen_Ideal::findTheClosestHalfSpace(double* point, int id) {
+int KerGen::findTheClosestHalfSpace(double* point, int id) {
 
 	double theClosestDistance = numeric_limits<double>::infinity();
 	int theClosestId = -1;
@@ -325,11 +325,11 @@ int KerGen_Ideal::findTheClosestHalfSpace(double* point, int id) {
 	for (int i = 0; i < 3; i++)
 		point[i] = point[i] + theClosestDirection[i] * theClosestDistance;
 
-	edgePartners[id].push(EdgePartnerTriple_Ideal(theClosestId, intersectionLineDirection, point, 0, -1));
+	edgePartners[id].push(EdgePartnerTriple(theClosestId, intersectionLineDirection, point, 0, -1));
 	edgePartnerIds[id].push_back(theClosestId);
 	edgePartnerIds[theClosestId].push_back(id);
-	isKernelFace[id] = ProcessColor_Ideal::WHITE;
-	isKernelFace[theClosestId] = ProcessColor_Ideal::WHITE;
+	isKernelFace[id] = ProcessColor::WHITE;
+	isKernelFace[theClosestId] = ProcessColor::WHITE;
 
 	vector<int> parentIdsForNewVertex;
 	parentIdsForNewVertex.push_back(id);
@@ -341,7 +341,7 @@ int KerGen_Ideal::findTheClosestHalfSpace(double* point, int id) {
 
 }
 
-vector<int> KerGen_Ideal::findTheClosestHalfSpace(int vertexId, double* lineDirection, int lineParent1Id, int lineParent2Id, int backPlaneId, double* newpoint) {
+vector<int> KerGen::findTheClosestHalfSpace(int vertexId, double* lineDirection, int lineParent1Id, int lineParent2Id, int backPlaneId, double* newpoint) {
 
 	vector<int> theClosestIds;
 	Line line(kernel.getVertex(vertexId).coords, lineDirection);
@@ -459,7 +459,7 @@ vector<int> KerGen_Ideal::findTheClosestHalfSpace(int vertexId, double* lineDire
 
 }
 
-void KerGen_Ideal::orderTheFaces(int base_id, int partner_id, vector<int> next_partner_ids, double* startPoint, double* currentEdgeDirection) {
+void KerGen::orderTheFaces(int base_id, int partner_id, vector<int> next_partner_ids, double* startPoint, double* currentEdgeDirection) {
 
 	vector<int> generators_all = { base_id, partner_id };
 	for (int i = 0; i < next_partner_ids.size(); i++)
@@ -608,15 +608,15 @@ void KerGen_Ideal::orderTheFaces(int base_id, int partner_id, vector<int> next_p
 						nextEdgeDirection[k] = -nextEdgeDirection[k];
 				}
 
-				edgePartners[generators[i]].push(EdgePartnerTriple_Ideal(generators[j], nextEdgeDirection, startPoint, kernel.getNumOfVerts() - 1, backPlaneId));
+				edgePartners[generators[i]].push(EdgePartnerTriple(generators[j], nextEdgeDirection, startPoint, kernel.getNumOfVerts() - 1, backPlaneId));
 				//edgePartners[generators[j]].push(EdgePartnerTriple_Ideal(generators[i], nextEdgeDirection, startPoint, kernel.getNumOfVerts() - 1, backPlaneId));
 
 				edgePartnerIds[generators[i]].push_back(generators[j]);
 				edgePartnerIds[generators[j]].push_back(generators[i]);
 				//if (isKernelFace[generators[i]] != ProcessColor_Ideal::GREEN)
-					isKernelFace[generators[i]] = ProcessColor_Ideal::WHITE;
+					isKernelFace[generators[i]] = ProcessColor::WHITE;
 				//if (isKernelFace[generators[j]] != ProcessColor_Ideal::GREEN)
-					isKernelFace[generators[j]] = ProcessColor_Ideal::WHITE;
+					isKernelFace[generators[j]] = ProcessColor::WHITE;
 			}
 
 		}
@@ -624,7 +624,7 @@ void KerGen_Ideal::orderTheFaces(int base_id, int partner_id, vector<int> next_p
 
 }
 
-bool KerGen_Ideal::isRecordedEdge(int hs1_id, int hs2_id) {
+bool KerGen::isRecordedEdge(int hs1_id, int hs2_id) {
 
 	for (int j = 0; j < edgePartnerIds[hs1_id].size(); j++)
 		if (edgePartnerIds[hs1_id][j] == hs2_id)
@@ -633,7 +633,7 @@ bool KerGen_Ideal::isRecordedEdge(int hs1_id, int hs2_id) {
 
 }
 
-void KerGen_Ideal::findInitialPoint_1(double* point) {
+void KerGen::findInitialPoint_1(double* point) {
 
 	computeHalfSpacesFromTriangles(hostMeshptr->getAllTris(), hostMeshptr->getAllVerts(), halfSpaceSet);
 
@@ -670,7 +670,7 @@ void KerGen_Ideal::findInitialPoint_1(double* point) {
 
 }
 
-void KerGen_Ideal::filterRepetitions2(double* distances, vector<double>& scalarsVector) {
+void KerGen::filterRepetitions2(double* distances, vector<double>& scalarsVector) {
 
 	for (int i = 0; i < halfSpaceSet.size(); i++) {
 		scalarsVector.push_back(distances[i]);

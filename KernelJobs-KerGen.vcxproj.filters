@@ -45,7 +45,7 @@
     <ClCompile Include="MeshTools.cpp">
       <Filter>Models</Filter>
     </ClCompile>
-    <ClCompile Include="KerGen_Ideal.cpp">
+    <ClCompile Include="KerGen.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
     <ClCompile Include="KernelByCGAL.cpp">
@@ -104,7 +104,7 @@
     <ClInclude Include="Mesh.h">
       <Filter>Models</Filter>
     </ClInclude>
-    <ClInclude Include="KerGen_Ideal.h">
+    <ClInclude Include="KerGen.h">
       <Filter>Controllers</Filter>
     </ClInclude>
     <ClInclude Include="KernelByCGAL.h">
